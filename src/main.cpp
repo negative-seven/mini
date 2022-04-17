@@ -42,11 +42,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
 
     ShowWindow(hwnd, SW_SHOW);
 
-    MSG msg;
-    while (GetMessage(&msg, NULL, 0, 0) > 0)
+    LARGE_INTEGER targetTime;
+    LARGE_INTEGER currentTime;
+    LARGE_INTEGER tickTime;
+
+    QueryPerformanceFrequency(&tickTime);
+    tickTime.LowPart /= 10; // hopefully it fits within 32 bits
+
+    QueryPerformanceCounter(&targetTime);
+
+    while (true)
     {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
+        MSG msg;
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+
+        QueryPerformanceCounter(&currentTime);
+        if (currentTime.QuadPart > targetTime.QuadPart)
+        {
+            targetTime.QuadPart += tickTime.QuadPart;
+            simulation.step();
+            InvalidateRect(hwnd, NULL, false);
+        }
     }
 
     return 0;
@@ -62,7 +82,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     case WM_PAINT:
         simulation.draw(hwnd);
-        simulation.step();
         return 0;
     }
 
