@@ -1,4 +1,5 @@
 CC = gcc.exe
+CFLAGS = -Os
 CL = crinkler.exe
 CLFLAGS = /OUT:$(BIN) /SUBSYSTEM:CONSOLE /ENTRY:WinMain 
 CLLIBS = kernel32.lib user32.lib ucrt.lib gdi32.lib ntdll.lib
@@ -14,6 +15,6 @@ $(BIN): $(OBJ)
 	$(CL) $(CLFLAGS) $(CLLIBS) $(OBJ)
 
 out/main.o: src/main.c
-	$(CC) -c src/main.c -o out/main.o
+	$(CC) $(CFLAGS) -c src/main.c -o out/main.o
 
 .PHONY: all makedirs
