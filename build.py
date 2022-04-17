@@ -4,10 +4,10 @@ import subprocess
 pathlib.Path('out/').mkdir(exist_ok=True)
 
 result_compile = subprocess.run([
-    'g++',
+    'gcc',
     '-c',
     '-o', 'out/main.o',
-    'src/main.cpp',
+    'src/main.c',
 ], check=True)
 
 subprocess.run([
