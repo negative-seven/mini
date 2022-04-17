@@ -7,7 +7,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow)
 {
     const char CLASS_NAME[]  = " ";
-    
+
     WNDCLASS wc = {};
     wc.lpfnWndProc   = WindowProc;
     wc.hInstance     = hInstance;
@@ -18,11 +18,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
         0,
         CLASS_NAME,
         "GFK 2022",
-        WS_OVERLAPPEDWINDOW,
+        WS_SYSMENU,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
+        1024,
+        768,
         NULL,
         NULL,
         hInstance,
