@@ -1,6 +1,10 @@
 #include <windows.h>
 #include <stdio.h>
 
+#include "simulation.h"
+
+
+Simulation simulation;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -34,6 +38,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
         return 0;
     }
 
+    simulation.init();
+
     ShowWindow(hwnd, SW_SHOW);
 
     MSG msg;
@@ -55,12 +61,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         return 0;
 
     case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hwnd, &ps);
-            FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW+1));
-            EndPaint(hwnd, &ps);
-        }
+        simulation.draw(hwnd);
+        simulation.step();
         return 0;
     }
 
