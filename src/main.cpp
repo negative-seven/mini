@@ -3,6 +3,8 @@
 
 #include "simulation.h"
 
+#define TPS 10
+
 
 Simulation simulation;
 
