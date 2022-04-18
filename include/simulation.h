@@ -1,3 +1,4 @@
+#define TPS 10
 #define SIMULATION_WIDTH 20
 #define SIMULATION_HEIGHT 20
 

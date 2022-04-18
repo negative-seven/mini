@@ -17,7 +17,7 @@ $(BIN): $(OBJ)
 out/main.o: src/main.cpp
 	$(CC) $(CFLAGS) -c src/main.cpp -o out/main.o
 
-out/simulation.o: src/simulation.cpp
+out/simulation.o: src/simulation.cpp include/simulation.h
 	$(CC) $(CFLAGS) -c src/simulation.cpp -o out/simulation.o
 
 .PHONY: all makedirs

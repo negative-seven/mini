@@ -47,7 +47,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
     LARGE_INTEGER tickTime;
 
     QueryPerformanceFrequency(&tickTime);
-    tickTime.LowPart /= 10; // hopefully it fits within 32 bits
+    tickTime.QuadPart = (double)tickTime.QuadPart / TPS;
 
     QueryPerformanceCounter(&targetTime);
 
