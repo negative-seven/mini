@@ -12,13 +12,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
 {
     const char CLASS_NAME[]  = " ";
 
-    WNDCLASS wc = {};
+    WNDCLASSA wc = {};
     wc.lpfnWndProc   = WindowProc;
     wc.hInstance     = hInstance;
     wc.lpszClassName = CLASS_NAME;
-    RegisterClass(&wc);
+    RegisterClassA(&wc);
 
-    HWND hwnd = CreateWindowEx(
+    HWND hwnd = CreateWindowExA(
         0,
         CLASS_NAME,
         "GFK 2022",
