@@ -7,12 +7,9 @@ void Simulation::init()
     {
         for (int j = 0; j < SIMULATION_HEIGHT; j++)
         {
-            cells[i][j] = 0;
+            cells[i][j] = ((723436127 % (i + 253)) % (j + 245)) % 2;
         }
     }
-    cells[SIMULATION_WIDTH / 2][SIMULATION_HEIGHT / 2] = 1;
-    cells[SIMULATION_WIDTH / 2][SIMULATION_HEIGHT / 2 - 1] = 1;
-    cells[SIMULATION_WIDTH / 2][SIMULATION_HEIGHT / 2 + 1] = 1;
 }
 
 void Simulation::step()
