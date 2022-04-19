@@ -9,7 +9,7 @@ void Simulation::init()
     {
         for (int j = 0; j < SIMULATION_HEIGHT; j++)
         {
-            cells[i * SIMULATION_WIDTH + j] = ((723436127 % (i + 253)) % (j + 245)) % 2;
+            cells[i * SIMULATION_WIDTH + j] = ((723436127 % (i * 633 + 253)) % (j + 245)) % 2;
         }
     }
 }
@@ -73,7 +73,7 @@ void Simulation::draw(HWND hwnd)
         {
             if (cells[i * SIMULATION_WIDTH + j])
             {
-                Rectangle(hdc, i * 20, j * 20, (i + 1) * 20, (j + 1) * 20);
+                Rectangle(hdc, i, j, i + 2, j + 2);
             }
         }
     }

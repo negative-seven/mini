@@ -1,5 +1,5 @@
-#define SIMULATION_WIDTH 20
-#define SIMULATION_HEIGHT 20
+#define SIMULATION_WIDTH 800
+#define SIMULATION_HEIGHT 800
 
 #include <stdbool.h>
 #include <windows.h>
