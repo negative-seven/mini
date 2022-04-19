@@ -12,5 +12,5 @@ struct Simulation
 public:
     void init();
     void step();
-    void draw(HWND hwnd);
+    void draw(HDC hdc, PAINTSTRUCT ps);
 };

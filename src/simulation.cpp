@@ -56,10 +56,8 @@ void Simulation::step()
     free(new_cells);
 }
 
-void Simulation::draw(HWND hwnd)
+void Simulation::draw(HDC hdc, PAINTSTRUCT ps)
 {
-    PAINTSTRUCT ps;
-    HDC hdc = BeginPaint(hwnd, &ps);
     SelectObject(hdc, GetStockObject(DC_PEN));
     SelectObject(hdc, GetStockObject(DC_BRUSH));
 
@@ -77,6 +75,4 @@ void Simulation::draw(HWND hwnd)
             }
         }
     }
-
-    EndPaint(hwnd, &ps);
 }

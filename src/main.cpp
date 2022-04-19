@@ -83,8 +83,22 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         return 0;
 
     case WM_PAINT:
-        simulation.draw(hwnd);
-        return 0;
+        {
+            RECT rect;
+            PAINTSTRUCT ps;
+            GetClientRect(hwnd, &rect);
+            HDC hdc = BeginPaint(hwnd, &ps);
+            HDC memoryDC = CreateCompatibleDC(hdc);
+            HBITMAP bitmap = CreateCompatibleBitmap(hdc, rect.right - rect.left, rect.bottom - rect.top);
+            SelectObject(memoryDC, bitmap);
+
+            simulation.draw(memoryDC, ps);
+
+            BitBlt(hdc, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, memoryDC, 0, 0, SRCCOPY);
+
+            EndPaint(hwnd, &ps);
+            return 0;
+        }
     }
 
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
