@@ -7,7 +7,7 @@
 
 struct Simulation
 {
-    bool *cells;
+    bool (*cells)[SIMULATION_WIDTH];
 
 public:
     void init();

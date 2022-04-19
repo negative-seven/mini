@@ -3,26 +3,26 @@
 
 void Simulation::init()
 {
-    cells = (bool *)malloc(sizeof(bool) * SIMULATION_WIDTH * SIMULATION_HEIGHT);
+    cells = (bool (*)[SIMULATION_WIDTH])malloc(sizeof(bool) * SIMULATION_WIDTH * SIMULATION_HEIGHT);
 
     for (int i = 0; i < SIMULATION_WIDTH; i++)
     {
         for (int j = 0; j < SIMULATION_HEIGHT; j++)
         {
-            cells[i * SIMULATION_WIDTH + j] = ((723436127 % (i * 633 + 253)) % (j + 245)) % 2;
+            cells[i][j] = (723436127 % (i * SIMULATION_WIDTH + j + 1)) % 3 == 0;
         }
     }
 }
 
 void Simulation::step()
 {
-    bool *new_cells = (bool *)malloc(sizeof(bool) * SIMULATION_WIDTH * SIMULATION_HEIGHT);
+    bool (*new_cells)[SIMULATION_WIDTH] = (bool (*)[SIMULATION_WIDTH])malloc(sizeof(bool) * SIMULATION_WIDTH * SIMULATION_HEIGHT);
 
     for (int i = 0; i < SIMULATION_WIDTH; i++)
     {
         for (int j = 0; j < SIMULATION_HEIGHT; j++)
         {
-            new_cells[i * SIMULATION_WIDTH + j] = 0;
+            new_cells[i][j] = 0;
         }
     }
 
@@ -31,17 +31,17 @@ void Simulation::step()
         for (int j = 1; j < SIMULATION_HEIGHT - 1; j++)
         {
             int count = 0;
-            count += cells[(i - 1) * SIMULATION_WIDTH + j - 1];
-            count += cells[(i - 1) * SIMULATION_WIDTH + j];
-            count += cells[(i - 1) * SIMULATION_WIDTH + j + 1];
-            count += cells[i * SIMULATION_WIDTH + j - 1];
-            count += cells[i * SIMULATION_WIDTH + j + 1];
-            count += cells[(i + 1) * SIMULATION_WIDTH + j - 1];
-            count += cells[(i + 1) * SIMULATION_WIDTH + j];
-            count += cells[(i + 1) * SIMULATION_WIDTH + j + 1];
+            count += cells[i - 1][j - 1];
+            count += cells[i - 1][j];
+            count += cells[i - 1][j + 1];
+            count += cells[i][j - 1];
+            count += cells[i][j + 1];
+            count += cells[i + 1][j - 1];
+            count += cells[i + 1][j];
+            count += cells[i + 1][j + 1];
 
-            bool state = cells[i * SIMULATION_WIDTH + j];
-            new_cells[i * SIMULATION_WIDTH + j] = (state && (count == 2)) || (count == 3);
+            bool state = cells[i][j];
+            new_cells[i][j] = (state && (count == 2)) || (count == 3);
         }
     }
 
@@ -49,7 +49,7 @@ void Simulation::step()
     {
         for (int j = 0; j < SIMULATION_HEIGHT; j++)
         {
-            cells[i * SIMULATION_WIDTH + j] = new_cells[i * SIMULATION_WIDTH + j];
+            cells[i][j] = new_cells[i][j];
         }
     }
 
@@ -71,9 +71,9 @@ void Simulation::draw(HWND hwnd)
     {
         for (int j = 0; j < SIMULATION_HEIGHT; j++)
         {
-            if (cells[i * SIMULATION_WIDTH + j])
+            if (cells[i][j])
             {
-                Rectangle(hdc, i, j, i + 2, j + 2);
+                Rectangle(hdc, i * 2, j * 2, i * 2 + 2, j * 2 + 2);
             }
         }
     }
