@@ -2,9 +2,9 @@ CC = g++.exe
 CFLAGS = -Os -I include/
 CL = crinkler.exe
 CLFLAGS = /OUT:$(BIN) /SUBSYSTEM:CONSOLE /ENTRY:WinMain 
-CLLIBS = kernel32.lib user32.lib ucrt.lib gdi32.lib ntdll.lib
+CLLIBS = kernel32.lib user32.lib gdi32.lib ntdll.lib
 BIN = out/out.exe
-OBJ = out/main.o out/simulation.o
+OBJ = out/main.o out/simulation.o out/cell.o out/random.o
 
 all: makedirs $(BIN)
 
@@ -19,5 +19,11 @@ out/main.o: src/main.cpp
 
 out/simulation.o: src/simulation.cpp include/simulation.h
 	$(CC) $(CFLAGS) -c src/simulation.cpp -o out/simulation.o
+
+out/cell.o: src/cell.cpp include/cell.h
+	$(CC) $(CFLAGS) -c src/cell.cpp -o out/cell.o
+
+out/random.o: src/random.cpp include/random.h
+	$(CC) $(CFLAGS) -c src/random.cpp -o out/random.o
 
 .PHONY: all makedirs

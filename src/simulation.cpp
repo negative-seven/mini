@@ -1,62 +1,77 @@
 #include <stdio.h>
 
 #include "constants.h"
+#include "random.h"
 #include "simulation.h"
 
 
 void Simulation::init()
 {
-    cells = (bool (*)[SIMULATION_WIDTH])malloc(sizeof(bool) * SIMULATION_WIDTH * SIMULATION_HEIGHT);
-
+    cells = (Cell (*)[SIMULATION_WIDTH])malloc(sizeof(Cell) * SIMULATION_WIDTH * SIMULATION_HEIGHT);
     for (int i = 0; i < SIMULATION_WIDTH; i++)
     {
         for (int j = 0; j < SIMULATION_HEIGHT; j++)
         {
-            cells[j][i] = (723436127 % (i * SIMULATION_WIDTH + j + 1)) % 3 == 0;
+            Cell cell;
+            cell.randomize(0);
+
+            cells[j][i] = cell;
         }
     }
+
+    iterationCount = 0;
 }
 
 void Simulation::step()
 {
-    bool (*new_cells)[SIMULATION_WIDTH] = (bool (*)[SIMULATION_WIDTH])malloc(sizeof(bool) * SIMULATION_WIDTH * SIMULATION_HEIGHT);
-
-    for (int i = 0; i < SIMULATION_WIDTH; i++)
+    for (int i = 0; i < 10000; i++)
     {
-        for (int j = 0; j < SIMULATION_HEIGHT; j++)
+        int x0 = Random::get(1, SIMULATION_WIDTH - 1);
+        int y0 = Random::get(1, SIMULATION_HEIGHT - 1);
+        int direction = Random::get(4);
+
+        int x1, y1;
+        switch (direction)
         {
-            new_cells[j][i] = 0;
+        case 0:
+            x1 = x0;
+            y1 = y0 - 1;
+            break;
+        case 1:
+            x1 = x0;
+            y1 = y0 + 1;
+            break;
+        case 2:
+            x1 = x0 - 1;
+            y1 = y0;
+            break;
+        case 3:
+            x1 = x0 + 1;
+            y1 = y0;
+            break;
+        }
+
+        int roll0 = cells[y0][x0].dice[Random::get(DICE_FACES_COUNT)];
+        int roll1 = cells[y1][x1].dice[Random::get(DICE_FACES_COUNT)];
+
+        if (roll0 > roll1)
+        {
+            cells[y1][x1] = cells[y0][x0].copy();
+        }
+        else if (roll1 > roll0)
+        {
+            cells[y0][x0] = cells[y1][x1].copy();
         }
     }
 
-    for (int j = 1; j < SIMULATION_WIDTH - 1; j++)
+    for (int i = 0; i < 1000; i++)
     {
-        for (int i = 1; i < SIMULATION_HEIGHT - 1; i++)
-        {
-            int count = 0;
-            count += cells[i - 1][j - 1];
-            count += cells[i - 1][j];
-            count += cells[i - 1][j + 1];
-            count += cells[i][j - 1];
-            count += cells[i][j + 1];
-            count += cells[i + 1][j - 1];
-            count += cells[i + 1][j];
-            count += cells[i + 1][j + 1];
-
-            bool state = cells[i][j];
-            new_cells[i][j] = (state && (count == 2)) || (count == 3);
-        }
+        int x = Random::get(SIMULATION_WIDTH);
+        int y = Random::get(SIMULATION_HEIGHT);
+        cells[y][x].randomize(iterationCount / 30 * 10000 + 1);
     }
 
-    for (int i = 0; i < SIMULATION_WIDTH; i++)
-    {
-        for (int j = 0; j < SIMULATION_HEIGHT; j++)
-        {
-            cells[j][i] = new_cells[j][i];
-        }
-    }
-
-    free(new_cells);
+    iterationCount++;
 }
 
 void Simulation::draw(unsigned char *data, int width, int height)
@@ -69,19 +84,11 @@ void Simulation::draw(unsigned char *data, int width, int height)
         for (int x = 0; x < SIMULATION_WIDTH; x++)
         {
             int index = y * rowDataSize + x * 3;
+            Cell &cell = cells[y][x];
 
-            if (cells[y][x])
-            {
-                data[index + 0] = 0;
-                data[index + 1] = 0;
-                data[index + 2] = 255;
-            }
-            else
-            {
-                data[index + 0] = 255;
-                data[index + 1] = 255;
-                data[index + 2] = 255;
-            }
+            data[index + 0] = cell.colorBlue;
+            data[index + 1] = cell.colorGreen;
+            data[index + 2] = cell.colorRed;
         }
     }
 }

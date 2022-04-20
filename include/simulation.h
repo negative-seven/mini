@@ -2,13 +2,16 @@
 
 #include <stdbool.h>
 #include <windows.h>
+#include <random>
+
+#include "cell.h"
 
 
 struct Simulation
 {
-    bool (*cells)[SIMULATION_WIDTH];
+    Cell (*cells)[SIMULATION_WIDTH];
+    int iterationCount;
 
-public:
     void init();
     void step();
     void draw(unsigned char *data, int width, int height);

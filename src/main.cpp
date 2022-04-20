@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "constants.h"
+#include "random.h"
 #include "simulation.h"
 
 
@@ -50,6 +51,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
         return 0;
     }
 
+    Random::init();
     simulation.init();
     bitmapData = (unsigned char *)calloc(1024 * 1024 * 10, 1);
 
