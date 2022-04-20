@@ -56,22 +56,28 @@ void Simulation::step()
     free(new_cells);
 }
 
-void Simulation::draw(HDC hdc, PAINTSTRUCT ps)
+void Simulation::draw(unsigned char *data, int width, int height)
 {
-    SelectObject(hdc, GetStockObject(DC_PEN));
-    SelectObject(hdc, GetStockObject(DC_BRUSH));
+    int rowDataSize = width * 3;
+    rowDataSize += 4 - (rowDataSize % 4);
 
-    FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW+1));
-
-    SetDCPenColor(hdc, RGB(255, 0, 0));
-    SetDCBrushColor(hdc, RGB(255, 0, 0));
-    for (int i = 0; i < SIMULATION_WIDTH; i++)
+    for (int y = 0; y < SIMULATION_HEIGHT; y++)
     {
-        for (int j = 0; j < SIMULATION_HEIGHT; j++)
+        for (int x = 0; x < SIMULATION_WIDTH; x++)
         {
-            if (cells[i][j])
+            int index = y * rowDataSize + x * 3;
+
+            if (cells[y][x])
             {
-                Rectangle(hdc, i * 2, j * 2, i * 2 + 2, j * 2 + 2);
+                data[index + 0] = 0;
+                data[index + 1] = 0;
+                data[index + 2] = 255;
+            }
+            else
+            {
+                data[index + 0] = 255;
+                data[index + 1] = 255;
+                data[index + 2] = 255;
             }
         }
     }
