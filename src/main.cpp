@@ -6,6 +6,7 @@
 #define TPS 10
 
 
+HDC memoryDC;
 Simulation simulation;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -15,9 +16,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
     const char CLASS_NAME[]  = " ";
 
     WNDCLASSA wc = {};
-    wc.lpfnWndProc   = WindowProc;
-    wc.hInstance     = hInstance;
+    wc.lpfnWndProc = WindowProc;
+    wc.hInstance = hInstance;
     wc.lpszClassName = CLASS_NAME;
+    wc.cbWndExtra = sizeof(HBITMAP);
     RegisterClassA(&wc);
 
     HWND hwnd = CreateWindowExA(
@@ -78,6 +80,17 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
+    case WM_CREATE:
+        {
+            RECT rect;
+            GetClientRect(hwnd, &rect);
+            HDC hdc = GetDC(hwnd);
+            memoryDC = CreateCompatibleDC(hdc);
+            HBITMAP bitmap = CreateCompatibleBitmap(hdc, rect.right - rect.left, rect.bottom - rect.top);
+            SelectObject(memoryDC, bitmap);
+            ReleaseDC(hwnd, hdc);
+        }
+
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;
@@ -85,12 +98,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
         {
             RECT rect;
-            PAINTSTRUCT ps;
             GetClientRect(hwnd, &rect);
+            
+            PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hwnd, &ps);
-            HDC memoryDC = CreateCompatibleDC(hdc);
-            HBITMAP bitmap = CreateCompatibleBitmap(hdc, rect.right - rect.left, rect.bottom - rect.top);
-            SelectObject(memoryDC, bitmap);
 
             simulation.draw(memoryDC, ps);
 
