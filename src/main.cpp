@@ -1,9 +1,8 @@
 #include <windows.h>
 #include <stdio.h>
 
+#include "constants.h"
 #include "simulation.h"
-
-#define TPS 10
 
 
 HDC memoryDC;
@@ -31,8 +30,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
         WS_SYSMENU,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
-        1024,
-        768,
+        SIMULATION_WIDTH,
+        SIMULATION_HEIGHT,
         NULL,
         NULL,
         hInstance,

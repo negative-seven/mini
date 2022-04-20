@@ -1,5 +1,4 @@
-#define SIMULATION_WIDTH 800
-#define SIMULATION_HEIGHT 800
+#pragma once
 
 #include <stdbool.h>
 #include <windows.h>

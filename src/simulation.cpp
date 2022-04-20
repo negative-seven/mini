@@ -1,3 +1,6 @@
+#include <stdio.h>
+
+#include "constants.h"
 #include "simulation.h"
 
 
@@ -9,7 +12,7 @@ void Simulation::init()
     {
         for (int j = 0; j < SIMULATION_HEIGHT; j++)
         {
-            cells[i][j] = (723436127 % (i * SIMULATION_WIDTH + j + 1)) % 3 == 0;
+            cells[j][i] = (723436127 % (i * SIMULATION_WIDTH + j + 1)) % 3 == 0;
         }
     }
 }
@@ -22,13 +25,13 @@ void Simulation::step()
     {
         for (int j = 0; j < SIMULATION_HEIGHT; j++)
         {
-            new_cells[i][j] = 0;
+            new_cells[j][i] = 0;
         }
     }
 
-    for (int i = 1; i < SIMULATION_WIDTH - 1; i++)
+    for (int j = 1; j < SIMULATION_WIDTH - 1; j++)
     {
-        for (int j = 1; j < SIMULATION_HEIGHT - 1; j++)
+        for (int i = 1; i < SIMULATION_HEIGHT - 1; i++)
         {
             int count = 0;
             count += cells[i - 1][j - 1];
@@ -49,7 +52,7 @@ void Simulation::step()
     {
         for (int j = 0; j < SIMULATION_HEIGHT; j++)
         {
-            cells[i][j] = new_cells[i][j];
+            cells[j][i] = new_cells[j][i];
         }
     }
 
