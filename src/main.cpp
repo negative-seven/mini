@@ -23,20 +23,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
     wc.cbWndExtra = sizeof(HBITMAP);
     RegisterClassA(&wc);
 
+    RECT rect = {};
+    rect.right = SIMULATION_WIDTH;
+    rect.bottom = SIMULATION_HEIGHT;
+    AdjustWindowRect(&rect, WS_CAPTION | WS_SYSMENU | WS_THICKFRAME, false);
+
     HWND hwnd = CreateWindowExA(
         0,
         CLASS_NAME,
         "GFK 2022",
-        WS_SYSMENU,
+        WS_CAPTION | WS_SYSMENU | WS_THICKFRAME,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
-        SIMULATION_WIDTH,
-        SIMULATION_HEIGHT,
+        rect.right - rect.left,
+        rect.bottom - rect.top,
         NULL,
         NULL,
         hInstance,
         NULL
     );
+
+    SetWindowLong(hwnd, GWL_STYLE, WS_CAPTION | WS_SYSMENU);
 
     if (hwnd == NULL)
     {

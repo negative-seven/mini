@@ -62,7 +62,7 @@ void Simulation::step()
 void Simulation::draw(unsigned char *data, int width, int height)
 {
     int rowDataSize = width * 3;
-    rowDataSize += 4 - (rowDataSize % 4);
+    rowDataSize += (-rowDataSize + 4) % 4;
 
     for (int y = 0; y < SIMULATION_HEIGHT; y++)
     {
