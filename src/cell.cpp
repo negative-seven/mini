@@ -4,32 +4,25 @@
 #include "random.h"
 
 
-void Cell::randomize(int diceSum)
+void Cell::randomize(int tick)
 {
     colorRed = Random::get(256);
     colorGreen = Random::get(256);
     colorBlue = Random::get(256);
 
-    int sum = diceSum;
-    for (int i = 0; i < DICE_FACES_COUNT - 1; i++)
-    {
-        int value = Random::get(sum + 1);
-        dice[i] = value;
-        sum -= value;
-    }
-    dice[DICE_FACES_COUNT - 1] = sum;
+    int r = Random::get(1000);
+    power = 1000000.0 / (r * r);
 };
 
-Cell Cell::copy()
+Cell Cell::makeClone()
 {
+    power *= 0.99;
+
     Cell newCell;
     newCell.colorRed = colorRed;
     newCell.colorGreen = colorGreen;
     newCell.colorBlue = colorBlue;
-    for (int i = 0; i < DICE_FACES_COUNT; i++)
-    {
-        newCell.dice[i] = dice[i];
-    }
-    
+    newCell.power = power;
+
     return newCell;
 }

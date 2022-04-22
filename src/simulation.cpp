@@ -24,7 +24,7 @@ void Simulation::init()
 
 void Simulation::step()
 {
-    for (int i = 0; i < 10000; i++)
+    for (int i = 0; i < 100000; i++)
     {
         int x0 = Random::get(1, SIMULATION_WIDTH - 1);
         int y0 = Random::get(1, SIMULATION_HEIGHT - 1);
@@ -51,24 +51,26 @@ void Simulation::step()
             break;
         }
 
-        int roll0 = cells[y0][x0].dice[Random::get(DICE_FACES_COUNT)];
-        int roll1 = cells[y1][x1].dice[Random::get(DICE_FACES_COUNT)];
 
-        if (roll0 > roll1)
+
+        int power0 = cells[y0][x0].power;
+        int power1 = cells[y1][x1].power;
+
+        if (power0 > power1)
         {
-            cells[y1][x1] = cells[y0][x0].copy();
+            cells[y1][x1] = cells[y0][x0].makeClone();
         }
-        else if (roll1 > roll0)
+        else if (power1 > power0)
         {
-            cells[y0][x0] = cells[y1][x1].copy();
+            cells[y0][x0] = cells[y1][x1].makeClone();
         }
     }
 
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 100; i++)
     {
         int x = Random::get(SIMULATION_WIDTH);
         int y = Random::get(SIMULATION_HEIGHT);
-        cells[y][x].randomize(iterationCount / 30 * 10000 + 1);
+        cells[y][x].randomize(iterationCount);
     }
 
     iterationCount++;
