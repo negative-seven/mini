@@ -14,5 +14,5 @@ struct Simulation
 
     void init();
     void step();
-    void draw(unsigned char *data, int width, int height);
+    void draw(unsigned char *data);
 };

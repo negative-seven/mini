@@ -25,8 +25,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
     RegisterClassA(&wc);
 
     RECT rect = {};
-    rect.right = SIMULATION_WIDTH;
-    rect.bottom = SIMULATION_HEIGHT;
+    rect.right = WINDOW_WIDTH;
+    rect.bottom = WINDOW_HEIGHT;
     AdjustWindowRect(&rect, WS_CAPTION | WS_SYSMENU | WS_THICKFRAME, false);
 
     HWND hwnd = CreateWindowExA(
@@ -93,11 +93,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
     case WM_CREATE:
         {
-            RECT rect;
-            GetClientRect(hwnd, &rect);
             HDC hdc = GetDC(hwnd);
             memoryDC = CreateCompatibleDC(hdc);
-            memoryDCBitmap = CreateCompatibleBitmap(hdc, rect.right - rect.left, rect.bottom - rect.top);
+            memoryDCBitmap = CreateCompatibleBitmap(hdc, WINDOW_WIDTH, WINDOW_HEIGHT);
             SelectObject(memoryDC, memoryDCBitmap);
             ReleaseDC(hwnd, hdc);
         }
@@ -108,22 +106,28 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     case WM_PAINT:
         {
-            RECT rect;
-            GetClientRect(hwnd, &rect);
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hwnd, &ps);
             BITMAPINFO bitmapInfo = {};
             bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo.bmiHeader);
-            bitmapInfo.bmiHeader.biWidth = rect.right - rect.left;
-            bitmapInfo.bmiHeader.biHeight = -(rect.bottom - rect.top);
+            bitmapInfo.bmiHeader.biWidth = SIMULATION_WIDTH;
+            bitmapInfo.bmiHeader.biHeight = -SIMULATION_HEIGHT;
             bitmapInfo.bmiHeader.biPlanes = 1;
             bitmapInfo.bmiHeader.biBitCount = 24;
             bitmapInfo.bmiHeader.biCompression = BI_RGB;
 
-            simulation.draw(bitmapData, rect.right - rect.left, rect.bottom - rect.top);
+            simulation.draw(bitmapData);
 
-            SetDIBits(memoryDC, memoryDCBitmap, 0, rect.bottom - rect.top, bitmapData, &bitmapInfo, DIB_RGB_COLORS);
-            BitBlt(hdc, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, memoryDC, 0, 0, SRCCOPY);
+            SetDIBits(memoryDC, memoryDCBitmap, 0, SIMULATION_HEIGHT, bitmapData, &bitmapInfo, DIB_RGB_COLORS);
+            StretchBlt(
+                hdc,
+                0, 0,
+                WINDOW_WIDTH, WINDOW_HEIGHT,
+                memoryDC,
+                0, 0,
+                SIMULATION_WIDTH, SIMULATION_HEIGHT,
+                SRCCOPY
+            );
 
             EndPaint(hwnd, &ps);
             return 0;
