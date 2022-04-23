@@ -16,7 +16,7 @@ void Cell::randomize(int tick)
 
 Cell Cell::makeClone()
 {
-    power *= 0.99;
+    power *= 0.96;
 
     Cell newCell;
     newCell.colorHue = colorHue;
