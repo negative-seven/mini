@@ -6,7 +6,7 @@
 
 void Cell::randomize(int tick)
 {
-    colorHue = Random::get(256);
+    colorHue = Random::getDouble();
     colorSaturation = 200;
     colorLightness = Random::get(96, 144);
 
@@ -19,16 +19,10 @@ Cell Cell::makeClone()
     power *= 0.96;
 
     Cell newCell;
-    newCell.colorHue = colorHue;
+    newCell.colorHue = fmod(colorHue + Random::getDouble(-0.005, 0.005) + 1, 1);
     newCell.colorSaturation = colorSaturation;
     newCell.colorLightness = colorLightness;
     newCell.power = power;
-
-    double r = Random::getDouble();
-    if (r < 0.2)
-    {
-        newCell.colorHue += Random::get(2) ? 1 : -1;
-    }
 
     return newCell;
 }

@@ -5,7 +5,7 @@
 
 struct Cell
 {
-    unsigned char colorHue;
+    double colorHue;
     unsigned char colorSaturation;
     unsigned char colorLightness;
     int power;

@@ -86,7 +86,7 @@ void Simulation::draw(unsigned char *data)
             int index = y * rowDataSize + x * 3;
             Cell &cell = cells[y][x];
 
-            double h = (double)cell.colorHue / 255;
+            double h = cell.colorHue;
             double s = (double)cell.colorSaturation / 255;
             double l = (double)cell.colorLightness / 255;
             double c = (1 - abs(l * 2 - 1)) * s;
