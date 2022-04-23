@@ -5,9 +5,9 @@
 
 struct Cell
 {
-    unsigned char colorRed;
-    unsigned char colorGreen;
-    unsigned char colorBlue;
+    unsigned char colorHue;
+    unsigned char colorSaturation;
+    unsigned char colorLightness;
     int power;
 
     void randomize(int tick);

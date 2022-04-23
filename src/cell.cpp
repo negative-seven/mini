@@ -6,9 +6,9 @@
 
 void Cell::randomize(int tick)
 {
-    colorRed = Random::get(256);
-    colorGreen = Random::get(256);
-    colorBlue = Random::get(256);
+    colorHue = Random::get(256);
+    colorSaturation = 200;
+    colorLightness = Random::get(96, 144);
 
     int r = Random::get(1000);
     power = 1000000.0 / (r * r);
@@ -19,9 +19,9 @@ Cell Cell::makeClone()
     power *= 0.99;
 
     Cell newCell;
-    newCell.colorRed = colorRed;
-    newCell.colorGreen = colorGreen;
-    newCell.colorBlue = colorBlue;
+    newCell.colorHue = colorHue;
+    newCell.colorSaturation = colorSaturation;
+    newCell.colorLightness = colorLightness;
     newCell.power = power;
 
     return newCell;
