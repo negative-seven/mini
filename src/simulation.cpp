@@ -24,6 +24,13 @@ void Simulation::init()
 
 void Simulation::step()
 {
+    for (int i = 0; i < 100; i++)
+    {
+        int x = Random::get(SIMULATION_WIDTH);
+        int y = Random::get(SIMULATION_HEIGHT);
+        cells[y][x].randomize(iterationCount);
+    }
+
     for (int i = 0; i < 100000; i++)
     {
         int x0 = Random::get(1, SIMULATION_WIDTH - 1);
@@ -51,8 +58,6 @@ void Simulation::step()
             break;
         }
 
-
-
         int power0 = cells[y0][x0].power;
         int power1 = cells[y1][x1].power;
 
@@ -64,13 +69,6 @@ void Simulation::step()
         {
             cells[y0][x0] = cells[y1][x1].makeClone();
         }
-    }
-
-    for (int i = 0; i < 100; i++)
-    {
-        int x = Random::get(SIMULATION_WIDTH);
-        int y = Random::get(SIMULATION_HEIGHT);
-        cells[y][x].randomize(iterationCount);
     }
 
     iterationCount++;
