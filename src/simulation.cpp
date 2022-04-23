@@ -86,53 +86,65 @@ void Simulation::draw(unsigned char *data)
             int index = y * rowDataSize + x * 3;
             Cell &cell = cells[y][x];
 
-            double h = cell.colorHue;
-            double s = (double)cell.colorSaturation / 255;
-            double l = (double)cell.colorLightness / 255;
-            double c = (1 - abs(l * 2 - 1)) * s;
-            double y = c * (1 - abs(fmod(h * 6, 2) - 1));
-            double m = l - c / 2;
-            double r, g, b;
-            if (h < 1.0/6)
+            bool isBorder = x > 0 && cells[y][x - 1].regionId != cell.regionId;
+            isBorder |= y > 0 && cells[y - 1][x].regionId != cell.regionId;
+
+            if (isBorder)
             {
-                r = c + m;
-                g = y + m;
-                b = m;
-            }
-            else if (h < 2.0/6)
-            {
-                r = y + m;
-                g = c + m;
-                b = m;
-            }
-            else if (h < 3.0/6)
-            {
-                r = m;
-                g = c + m;
-                b = y + m;
-            }
-            else if (h < 4.0/6)
-            {
-                r = m;
-                g = y + m;
-                b = c + m;
-            }
-            else if (h < 5.0/6)
-            {
-                r = y + m;
-                g = m;
-                b = c + m;
+                data[index + 0] = 0;
+                data[index + 1] = 0;
+                data[index + 2] = 0;
             }
             else
             {
-                r = c + m;
-                g = m;
-                b = y + m;
-            }
+                double h = cell.colorHue;
+                double s = (double)cell.colorSaturation / 255;
+                double l = (double)cell.colorLightness / 255;
+                double c = (1 - abs(l * 2 - 1)) * s;
+                double y = c * (1 - abs(fmod(h * 6, 2) - 1));
+                double m = l - c / 2;
+                double r, g, b;
+                if (h < 1.0/6)
+                {
+                    r = c + m;
+                    g = y + m;
+                    b = m;
+                }
+                else if (h < 2.0/6)
+                {
+                    r = y + m;
+                    g = c + m;
+                    b = m;
+                }
+                else if (h < 3.0/6)
+                {
+                    r = m;
+                    g = c + m;
+                    b = y + m;
+                }
+                else if (h < 4.0/6)
+                {
+                    r = m;
+                    g = y + m;
+                    b = c + m;
+                }
+                else if (h < 5.0/6)
+                {
+                    r = y + m;
+                    g = m;
+                    b = c + m;
+                }
+                else
+                {
+                    r = c + m;
+                    g = m;
+                    b = y + m;
+                }
 
-            data[index + 0] = r * 255;
-            data[index + 1] = g * 255;
-            data[index + 2] = b * 255;
+                data[index + 0] = r * 255;
+                data[index + 1] = g * 255;
+                data[index + 2] = b * 255;
+            }
         }
     }
 }

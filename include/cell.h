@@ -9,6 +9,7 @@ struct Cell
     unsigned char colorSaturation;
     unsigned char colorLightness;
     int power;
+    int regionId;
 
     void randomize(int tick);
     Cell makeClone();
