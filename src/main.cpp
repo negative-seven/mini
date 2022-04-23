@@ -141,6 +141,15 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             return 0;
         }
 
+    case WM_KEYDOWN:
+        if (lParam & (1 << 30)) return 0; // skip autorepeat messages
+
+        if (wParam == 'B')
+        {
+            simulation.drawBorders ^= true;
+        }
+        return 0;
+
     case WM_CLOSE:
         ExitProcess(0);
         return 0;

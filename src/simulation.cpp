@@ -20,6 +20,7 @@ void Simulation::init()
     }
 
     iterationCount = 0;
+    drawBorders = true;
 }
 
 void Simulation::step()
@@ -86,8 +87,12 @@ void Simulation::draw(unsigned char *data)
             int index = y * rowDataSize + x * 3;
             Cell &cell = cells[y][x];
 
-            bool isBorder = x > 0 && cells[y][x - 1].regionId != cell.regionId;
-            isBorder |= y > 0 && cells[y - 1][x].regionId != cell.regionId;
+            bool isBorder = false;
+            if (drawBorders)
+            {
+                isBorder = isBorder || (x > 0 && cells[y][x - 1].regionId != cell.regionId);
+                isBorder = isBorder || (y > 0 && cells[y - 1][x].regionId != cell.regionId);
+            }
 
             if (isBorder)
             {
