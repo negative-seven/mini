@@ -129,6 +129,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 SRCCOPY
             );
 
+            RECT textRect;
+            textRect.left = 0;
+            textRect.top = 0;
+            textRect.right = WINDOW_WIDTH;
+            textRect.bottom = WINDOW_HEIGHT;
+            SetBkMode(hdc, TRANSPARENT);
+            DrawTextA(hdc, "Maya Jelonkiewicz", -1, &textRect, 0);
+
             EndPaint(hwnd, &ps);
             return 0;
         }
