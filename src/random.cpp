@@ -18,3 +18,13 @@ int Random::get(int min, int max)
 {
     return min + ((*_rng)() % (max - min));
 }
+
+double Random::getDouble(double max)
+{
+    return ((double)(*_rng)() / _rng->max()) * max;
+}
+
+double Random::getDouble(double min, double max)
+{
+    return min + ((double)(*_rng)() / _rng->max()) * (max - min);
+}

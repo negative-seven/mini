@@ -24,5 +24,11 @@ Cell Cell::makeClone()
     newCell.colorLightness = colorLightness;
     newCell.power = power;
 
+    double r = Random::getDouble();
+    if (r < 0.2)
+    {
+        newCell.colorHue += Random::get(2) ? 1 : -1;
+    }
+
     return newCell;
 }
