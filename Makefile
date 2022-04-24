@@ -1,32 +1,30 @@
-CC = g++.exe
-CFLAGS = -Os -I include/
-CL = crinkler.exe
-CLFLAGS = /OUT:$(BIN) /SUBSYSTEM:CONSOLE /ENTRY:WinMain 
-CLLIBS = kernel32.lib user32.lib gdi32.lib ntdll.lib
-BIN = out/out.exe
-OBJ = out/main.o out/simulation.o out/cell.o out/random.o out/fpscounter.o
+CXX = g++.exe
+CXXFLAGS = -Os -I $(INC_DIR)
+LNK = crinkler.exe
+LNKFLAGS = /OUT:$(BIN) /SUBSYSTEM:CONSOLE /ENTRY:WinMain 
+LNKLIBS = kernel32.lib user32.lib gdi32.lib ntdll.lib
 
-all: makedirs $(BIN)
+SRC_DIR = src
+OBJ_DIR = obj
+BIN_DIR = bin
+INC_DIR = include
+SRC = $(wildcard $(SRC_DIR)/*.cpp)
+OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+BIN = $(BIN_DIR)/mini.exe
+INC = $(wildcard $(INC_DIR)/*.h)
 
-makedirs:
-	-mkdir out
+all: $(BIN)
 
-$(BIN): $(OBJ)
-	$(CL) $(CLFLAGS) $(CLLIBS) $(OBJ)
+$(BIN): $(OBJ) | $(BIN_DIR)
+	$(LNK) $(LNKFLAGS) $(LNKLIBS) $(OBJ)
 
-out/main.o: src/main.cpp
-	$(CC) $(CFLAGS) -c src/main.cpp -o out/main.o
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(INC) | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-out/simulation.o: src/simulation.cpp include/simulation.h
-	$(CC) $(CFLAGS) -c src/simulation.cpp -o out/simulation.o
+$(OBJ_DIR) $(BIN_DIR):
+	-mkdir $@
 
-out/cell.o: src/cell.cpp include/cell.h
-	$(CC) $(CFLAGS) -c src/cell.cpp -o out/cell.o
+clean:
+	rmdir /s /q $(OBJ_DIR) $(BIN_DIR)
 
-out/random.o: src/random.cpp include/random.h
-	$(CC) $(CFLAGS) -c src/random.cpp -o out/random.o
-
-out/fpscounter.o: src/fpscounter.cpp include/fpscounter.h
-	$(CC) $(CFLAGS) -c src/fpscounter.cpp -o out/fpscounter.o
-
-.PHONY: all makedirs
+.PHONY: all clean
