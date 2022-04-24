@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "constants.h"
+#include "fpscounter.h"
 #include "random.h"
 #include "simulation.h"
 
@@ -10,6 +11,7 @@ HDC memoryDC;
 HBITMAP memoryDCBitmap;
 unsigned char *bitmapData;
 Simulation simulation;
+FpsCounter fpsCounter;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -32,7 +34,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
     HWND hwnd = CreateWindowExA(
         0,
         CLASS_NAME,
-        "GFK 2022",
+        "",
         WS_CAPTION | WS_SYSMENU | WS_THICKFRAME,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
@@ -58,6 +60,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
     ShowWindow(hwnd, SW_SHOW);
 
     LARGE_INTEGER targetTime;
+    LARGE_INTEGER previousTime;
     LARGE_INTEGER currentTime;
     LARGE_INTEGER tickTime;
 
@@ -65,6 +68,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
     tickTime.QuadPart = (double)tickTime.QuadPart / TPS;
 
     QueryPerformanceCounter(&targetTime);
+    currentTime = targetTime;
+    previousTime = targetTime;
 
     while (true)
     {
@@ -76,12 +81,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
         }
 
         QueryPerformanceCounter(&currentTime);
+
         if (currentTime.QuadPart > targetTime.QuadPart)
         {
             targetTime.QuadPart += tickTime.QuadPart;
+            LONGLONG threshold = currentTime.QuadPart - 10 * tickTime.QuadPart;
+            if (targetTime.QuadPart < threshold)
+            {
+                targetTime.QuadPart = threshold;
+            }
+
             simulation.step();
             InvalidateRect(hwnd, NULL, false);
+
+            fpsCounter.addFrameTime((double)(currentTime.QuadPart - previousTime.QuadPart) / (tickTime.QuadPart * TPS));
+            previousTime = currentTime;
         }
+
+        char windowTitle[1024];
+        sprintf(windowTitle, "GFK 2020 - %.1f fps", fpsCounter.getFps());
+        SetWindowTextA(hwnd, windowTitle);
     }
 
     return 0;

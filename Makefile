@@ -4,7 +4,7 @@ CL = crinkler.exe
 CLFLAGS = /OUT:$(BIN) /SUBSYSTEM:CONSOLE /ENTRY:WinMain 
 CLLIBS = kernel32.lib user32.lib gdi32.lib ntdll.lib
 BIN = out/out.exe
-OBJ = out/main.o out/simulation.o out/cell.o out/random.o
+OBJ = out/main.o out/simulation.o out/cell.o out/random.o out/fpscounter.o
 
 all: makedirs $(BIN)
 
@@ -25,5 +25,8 @@ out/cell.o: src/cell.cpp include/cell.h
 
 out/random.o: src/random.cpp include/random.h
 	$(CC) $(CFLAGS) -c src/random.cpp -o out/random.o
+
+out/fpscounter.o: src/fpscounter.cpp include/fpscounter.h
+	$(CC) $(CFLAGS) -c src/fpscounter.cpp -o out/fpscounter.o
 
 .PHONY: all makedirs
