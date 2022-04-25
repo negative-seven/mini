@@ -143,8 +143,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 0, 0,
                 WINDOW_WIDTH, WINDOW_HEIGHT,
                 memoryDC,
-                0, 0,
-                SIMULATION_WIDTH, SIMULATION_HEIGHT,
+                SIMULATION_DISPLAYED_X, SIMULATION_DISPLAYED_Y,
+                SIMULATION_DISPLAYED_WIDTH, SIMULATION_DISPLAYED_HEIGHT,
                 SRCCOPY
             );
 
