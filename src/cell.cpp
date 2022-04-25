@@ -5,7 +5,7 @@
 #include "random.h"
 
 
-void Cell::randomize(int tick)
+void Cell::randomize()
 {
     colorHue = Random::getDouble();
     colorSaturation = 200;

@@ -13,7 +13,7 @@ void Simulation::init()
         for (int j = 0; j < SIMULATION_HEIGHT; j++)
         {
             Cell cell;
-            cell.randomize(0);
+            cell.randomize();
 
             cells[j][i] = cell;
         }
@@ -29,7 +29,7 @@ void Simulation::step()
     {
         int x = Random::get(SIMULATION_WIDTH);
         int y = Random::get(SIMULATION_HEIGHT);
-        cells[y][x].randomize(iterationCount);
+        cells[y][x].randomize();
     }
 
     for (int i = 0; i < 100000; i++)

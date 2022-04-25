@@ -1,8 +1,8 @@
 #pragma once
 
+#include <random>
 #include <stdbool.h>
 #include <windows.h>
-#include <random>
 
 #include "cell.h"
 

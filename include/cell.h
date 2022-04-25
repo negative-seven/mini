@@ -11,6 +11,6 @@ struct Cell
     int power;
     int regionId;
 
-    void randomize(int tick);
+    void randomize();
     Cell makeClone();
 };

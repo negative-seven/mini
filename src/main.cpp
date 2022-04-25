@@ -12,6 +12,7 @@ HBITMAP memoryDCBitmap;
 unsigned char *bitmapData;
 Simulation simulation;
 FpsCounter fpsCounter;
+int ticks = 0;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -96,6 +97,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
 
             fpsCounter.addFrameTime((double)(currentTime.QuadPart - previousTime.QuadPart) / (tickTime.QuadPart * TPS));
             previousTime = currentTime;
+
+            ticks++;
         }
 
         char windowTitle[1024];
@@ -148,16 +151,19 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 SRCCOPY
             );
 
-            RECT textRect;
-            textRect.left = 0;
-            textRect.top = 0;
-            textRect.right = WINDOW_WIDTH;
-            textRect.bottom = WINDOW_HEIGHT;
-            SetBkMode(hdc, TRANSPARENT);
-            DrawTextA(hdc, "Maya Jelonkiewicz", -1, &textRect, 0);
+            if (ticks < 120)
+            {
+                RECT textRect;
+                textRect.left = 0;
+                textRect.top = 0;
+                textRect.right = WINDOW_WIDTH;
+                textRect.bottom = WINDOW_HEIGHT;
+                SetBkMode(hdc, TRANSPARENT);
+                DrawTextA(hdc, "Maya Jelonkiewicz", -1, &textRect, 0);
 
-            EndPaint(hwnd, &ps);
-            return 0;
+                EndPaint(hwnd, &ps);
+                return 0;
+            }
         }
 
     case WM_KEYDOWN:
