@@ -1,7 +1,7 @@
 CXX = g++.exe
 CXXFLAGS = -Os -I $(INC_DIR)
 LNK = crinkler.exe
-LNKFLAGS = /OUT:$(BIN) /SUBSYSTEM:CONSOLE /ENTRY:WinMain 
+LNKFLAGS = /OUT:$(BIN) /SUBSYSTEM:CONSOLE /ENTRY:WinMain
 LNKLIBS = kernel32.lib user32.lib gdi32.lib ntdll.lib
 
 SRC_DIR = src

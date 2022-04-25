@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <stdio.h>
+#include <ShellScalingApi.h>
 
 #include "constants.h"
 #include "fpscounter.h"
@@ -18,6 +19,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow)
 {
+    SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_SYSTEM_AWARE);
+
     const char CLASS_NAME[]  = " ";
 
     WNDCLASSA wc = {};
@@ -99,7 +102,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
             previousTime = currentTime;
 
             char windowTitle[1024];
-            sprintf(windowTitle, "GFK 2020 - %.1f fps", fpsCounter.getFps());
+            _snprintf(windowTitle, sizeof(windowTitle), "GFK 2020 - %.1f fps", fpsCounter.getFps());
             SetWindowTextA(hwnd, windowTitle);
 
             ticks++;
