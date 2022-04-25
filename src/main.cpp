@@ -75,7 +75,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
     while (true)
     {
         MSG msg;
-        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
@@ -98,12 +98,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
             fpsCounter.addFrameTime((double)(currentTime.QuadPart - previousTime.QuadPart) / (tickTime.QuadPart * TPS));
             previousTime = currentTime;
 
+            char windowTitle[1024];
+            sprintf(windowTitle, "GFK 2020 - %.1f fps", fpsCounter.getFps());
+            SetWindowTextA(hwnd, windowTitle);
+
             ticks++;
         }
-
-        char windowTitle[1024];
-        sprintf(windowTitle, "GFK 2020 - %.1f fps", fpsCounter.getFps());
-        SetWindowTextA(hwnd, windowTitle);
     }
 
     return 0;
