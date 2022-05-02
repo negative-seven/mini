@@ -21,6 +21,9 @@ void Simulation::init()
 
     iterationCount = 0;
     drawBorders = true;
+
+    regionSizes = (Counter *)malloc(sizeof(Counter));
+    *regionSizes = Counter(1000000);
 }
 
 void Simulation::step()
@@ -30,6 +33,7 @@ void Simulation::step()
         int x = Random::get(SIMULATION_WIDTH);
         int y = Random::get(SIMULATION_HEIGHT);
         cells[y][x].randomize();
+        regionSizes->increment(cells[y][x].regionId);
     }
 
     for (int i = 0; i < 100000; i++)
@@ -64,10 +68,14 @@ void Simulation::step()
 
         if (power0 > power1)
         {
+            regionSizes->increment(cells[y0][x0].regionId);
+            regionSizes->decrement(cells[y1][x1].regionId);
             cells[y1][x1] = cells[y0][x0].makeClone();
         }
         else if (power1 > power0)
         {
+            regionSizes->decrement(cells[y0][x0].regionId);
+            regionSizes->increment(cells[y1][x1].regionId);
             cells[y0][x0] = cells[y1][x1].makeClone();
         }
     }
@@ -90,8 +98,17 @@ void Simulation::draw(unsigned char *data)
             bool isBorder = false;
             if (drawBorders)
             {
-                isBorder = isBorder || (x > 0 && cells[y][x - 1].regionId != cell.regionId);
-                isBorder = isBorder || (y > 0 && cells[y - 1][x].regionId != cell.regionId);
+                isBorder =
+                    x > 0
+                    && y > 0
+                    && (
+                        cells[y][x - 1].regionId != cell.regionId
+                        || cells[y - 1][x].regionId != cell.regionId
+                    )
+                    && regionSizes->getCount(cell.regionId) > 5
+                    && regionSizes->getCount(cells[y][x - 1].regionId) > 5
+                    && regionSizes->getCount(cells[y - 1][x].regionId) > 5
+                ;
             }
 
             if (isBorder)

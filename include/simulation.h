@@ -5,6 +5,7 @@
 #include <windows.h>
 
 #include "cell.h"
+#include "counter.h"
 
 
 struct Simulation
@@ -12,6 +13,7 @@ struct Simulation
     Cell (*cells)[SIMULATION_WIDTH];
     int iterationCount;
     bool drawBorders;
+    Counter *regionSizes;
 
     void init();
     void step();
