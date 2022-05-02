@@ -28,7 +28,7 @@ void Simulation::init()
 
 void Simulation::step()
 {
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 75; i++)
     {
         int x = Random::get(SIMULATION_WIDTH);
         int y = Random::get(SIMULATION_HEIGHT);
@@ -36,7 +36,7 @@ void Simulation::step()
         regionSizes->increment(cells[y][x].regionId);
     }
 
-    for (int i = 0; i < 100000; i++)
+    for (int i = 0; i < 75000; i++)
     {
         int x0 = Random::get(1, SIMULATION_WIDTH - 1);
         int y0 = Random::get(1, SIMULATION_HEIGHT - 1);
