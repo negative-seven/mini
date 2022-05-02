@@ -163,10 +163,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 textRect.bottom = WINDOW_HEIGHT;
                 SetBkMode(hdc, TRANSPARENT);
                 DrawTextA(hdc, "Maya Jelonkiewicz", -1, &textRect, 0);
-
-                EndPaint(hwnd, &ps);
-                return 0;
             }
+
+            EndPaint(hwnd, &ps);
+            return 0;
         }
 
     case WM_KEYDOWN:
