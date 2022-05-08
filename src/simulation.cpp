@@ -20,7 +20,7 @@ void Simulation::init()
     }
 
     iterationCount = 0;
-    drawBorders = true;
+    drawBorders = false;
 
     regionSizes = (Counter *)malloc(sizeof(Counter));
     *regionSizes = Counter(1000000);
