@@ -14,6 +14,7 @@ unsigned char *bitmapData;
 Simulation simulation;
 FpsCounter fpsCounter;
 int ticks = 0;
+int scaleFactorExponent = 14;
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -95,7 +96,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
                 targetTime.QuadPart = threshold;
             }
 
-            simulation.step();
+            simulation.step(pow(SCALE_FACTOR_BASE, scaleFactorExponent));
             InvalidateRect(hwnd, NULL, false);
 
             fpsCounter.addFrameTime((double)(currentTime.QuadPart - previousTime.QuadPart) / (tickTime.QuadPart * TPS));
@@ -135,22 +136,23 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             HDC hdc = BeginPaint(hwnd, &ps);
             BITMAPINFO bitmapInfo = {};
             bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo.bmiHeader);
-            bitmapInfo.bmiHeader.biWidth = SIMULATION_WIDTH;
-            bitmapInfo.bmiHeader.biHeight = -SIMULATION_HEIGHT;
+            bitmapInfo.bmiHeader.biWidth = MAX_SIMULATION_WIDTH;
+            bitmapInfo.bmiHeader.biHeight = -MAX_SIMULATION_HEIGHT;
             bitmapInfo.bmiHeader.biPlanes = 1;
             bitmapInfo.bmiHeader.biBitCount = 24;
             bitmapInfo.bmiHeader.biCompression = BI_RGB;
 
-            simulation.draw(bitmapData);
+            double scaleFactor = pow(SCALE_FACTOR_BASE, scaleFactorExponent);
+            simulation.draw(scaleFactor, bitmapData);
 
-            SetDIBits(memoryDC, memoryDCBitmap, 0, SIMULATION_HEIGHT, bitmapData, &bitmapInfo, DIB_RGB_COLORS);
+            SetDIBits(memoryDC, memoryDCBitmap, 0, MAX_SIMULATION_HEIGHT, bitmapData, &bitmapInfo, DIB_RGB_COLORS);
             StretchBlt(
                 hdc,
                 0, 0,
                 WINDOW_WIDTH, WINDOW_HEIGHT,
                 memoryDC,
-                SIMULATION_DISPLAYED_X, SIMULATION_DISPLAYED_Y,
-                SIMULATION_DISPLAYED_WIDTH, SIMULATION_DISPLAYED_HEIGHT,
+                1, 1,
+                WINDOW_WIDTH / scaleFactor - 2, WINDOW_HEIGHT / scaleFactor - 2,
                 SRCCOPY
             );
 
@@ -172,9 +174,24 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_KEYDOWN:
         if (lParam & (1 << 30)) return 0; // skip autorepeat messages
 
-        if (wParam == 'B')
+        switch (wParam)
         {
+        case 'B':
             simulation.drawBorders ^= true;
+            break;
+
+        case VK_OEM_PLUS:
+            scaleFactorExponent++;
+            break;
+
+        case VK_OEM_MINUS:
+            scaleFactorExponent--;
+            if (scaleFactorExponent < 0)
+            {
+                scaleFactorExponent = 0;
+            }
+            break;
+
         }
         return 0;
 

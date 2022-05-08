@@ -10,12 +10,12 @@
 
 struct Simulation
 {
-    Cell (*cells)[SIMULATION_WIDTH];
+    Cell (*cells)[MAX_SIMULATION_WIDTH];
     int iterationCount;
     bool drawBorders;
     Counter *regionSizes;
 
     void init();
-    void step();
-    void draw(unsigned char *data);
+    void step(double scaleFactor);
+    void draw(double scaleFactor, unsigned char *data);
 };

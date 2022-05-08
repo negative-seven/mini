@@ -7,10 +7,10 @@
 
 void Simulation::init()
 {
-    cells = (Cell (*)[SIMULATION_WIDTH])malloc(sizeof(Cell) * SIMULATION_WIDTH * SIMULATION_HEIGHT);
-    for (int i = 0; i < SIMULATION_WIDTH; i++)
+    cells = (Cell (*)[MAX_SIMULATION_WIDTH])malloc(sizeof(Cell) * MAX_SIMULATION_WIDTH * MAX_SIMULATION_WIDTH);
+    for (int i = 0; i < MAX_SIMULATION_WIDTH; i++)
     {
-        for (int j = 0; j < SIMULATION_HEIGHT; j++)
+        for (int j = 0; j < MAX_SIMULATION_HEIGHT; j++)
         {
             Cell cell;
             cell.randomize();
@@ -26,20 +26,23 @@ void Simulation::init()
     *regionSizes = Counter(1000000);
 }
 
-void Simulation::step()
+void Simulation::step(double scaleFactor)
 {
-    for (int i = 0; i < 75; i++)
+    int simulationWidth = WINDOW_WIDTH / scaleFactor;
+    int simulationHeight = WINDOW_HEIGHT / scaleFactor;
+
+    for (int i = 0; i < 1200 / (scaleFactor * scaleFactor); i++)
     {
-        int x = Random::get(SIMULATION_WIDTH);
-        int y = Random::get(SIMULATION_HEIGHT);
+        int x = Random::get(simulationWidth);
+        int y = Random::get(simulationHeight);
         cells[y][x].randomize();
         regionSizes->increment(cells[y][x].regionId);
     }
 
-    for (int i = 0; i < 75000; i++)
+    for (int i = 0; i < 1200000 / (scaleFactor * scaleFactor); i++)
     {
-        int x0 = Random::get(1, SIMULATION_WIDTH - 1);
-        int y0 = Random::get(1, SIMULATION_HEIGHT - 1);
+        int x0 = Random::get(1, simulationWidth - 1);
+        int y0 = Random::get(1, simulationHeight - 1);
         int direction = Random::get(4);
 
         int x1, y1;
@@ -83,14 +86,17 @@ void Simulation::step()
     iterationCount++;
 }
 
-void Simulation::draw(unsigned char *data)
+void Simulation::draw(double scaleFactor, unsigned char *data)
 {
-    int rowDataSize = SIMULATION_WIDTH * 3;
+    int simulationWidth = WINDOW_WIDTH / scaleFactor;
+    int simulationHeight = WINDOW_HEIGHT / scaleFactor;
+
+    int rowDataSize = MAX_SIMULATION_WIDTH * 3;
     rowDataSize += ((rowDataSize % 4) + 4) % 4;
 
-    for (int y = 0; y < SIMULATION_HEIGHT; y++)
+    for (int y = 0; y < simulationHeight; y++)
     {
-        for (int x = 0; x < SIMULATION_WIDTH; x++)
+        for (int x = 0; x < simulationWidth; x++)
         {
             int index = y * rowDataSize + x * 3;
             Cell &cell = cells[y][x];
@@ -99,8 +105,8 @@ void Simulation::draw(unsigned char *data)
                 drawBorders
                 && x > 0
                 && y > 0
-                && x < SIMULATION_WIDTH - 1
-                && y < SIMULATION_HEIGHT - 1
+                && x < simulationWidth - 1
+                && y < simulationHeight - 1
                 && (
                     cell.regionId > cells[y][x - 1].regionId
                     || cell.regionId > cells[y][x + 1].regionId
