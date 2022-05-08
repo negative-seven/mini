@@ -95,21 +95,24 @@ void Simulation::draw(unsigned char *data)
             int index = y * rowDataSize + x * 3;
             Cell &cell = cells[y][x];
 
-            bool isBorder = false;
-            if (drawBorders)
-            {
-                isBorder =
-                    x > 0
-                    && y > 0
-                    && (
-                        cells[y][x - 1].regionId != cell.regionId
-                        || cells[y - 1][x].regionId != cell.regionId
-                    )
-                    && regionSizes->getCount(cell.regionId) > 5
-                    && regionSizes->getCount(cells[y][x - 1].regionId) > 5
-                    && regionSizes->getCount(cells[y - 1][x].regionId) > 5
-                ;
-            }
+            bool isBorder =
+                drawBorders
+                && x > 0
+                && y > 0
+                && x < SIMULATION_WIDTH - 1
+                && y < SIMULATION_HEIGHT - 1
+                && (
+                    cell.regionId > cells[y][x - 1].regionId
+                    || cell.regionId > cells[y][x + 1].regionId
+                    || cell.regionId > cells[y - 1][x].regionId
+                    || cell.regionId > cells[y + 1][x].regionId
+                )
+                && regionSizes->getCount(cell.regionId) > 5
+                && regionSizes->getCount(cells[y][x - 1].regionId) > 5
+                && regionSizes->getCount(cells[y][x + 1].regionId) > 5
+                && regionSizes->getCount(cells[y - 1][x].regionId) > 5
+                && regionSizes->getCount(cells[y + 1][x].regionId) > 5
+            ;
 
             if (isBorder)
             {
